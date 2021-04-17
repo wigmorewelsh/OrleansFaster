@@ -26,6 +26,7 @@ namespace Orleans.Persistence.Faster
     {
         private readonly ILogger<FasterGrainStorage> logger;
         private readonly IGrainReferenceConverter locator;
+        private readonly IOptions<FasterGrainStorageOptions> _options;
         private readonly string name;
         private FasterKV<ReadOnlyMemory<byte>, Memory<byte>> store;
         private IDevice? log;
@@ -43,6 +44,7 @@ namespace Orleans.Persistence.Faster
         {
             this.logger = logger;
             this.locator = locator;
+            _options = options;
             this.name = name;
             _defaultSerializer = defaultSerializer;
         }
@@ -134,7 +136,7 @@ namespace Orleans.Persistence.Faster
             {
                 logger.Info("Starting Faster Log");
 
-                log = Devices.CreateLogDevice(@$"data/{name}/hlog.log");
+                log = Devices.CreateLogDevice(Path.Combine(_options.Value.StorageBaseDirectory,  @$"{name}/hlog.log"));
 
                 var logSettings = new LogSettings
                 {
@@ -146,7 +148,7 @@ namespace Orleans.Persistence.Faster
                     MemorySizeBits = 31 // 2GB
                 };
 
-                var checkpointDir = @$"data/{name}";
+                var checkpointDir = Path.Combine(_options.Value.StorageBaseDirectory,  name);
                 var deviceLogCommitCheckpointManager = new DeviceLogCommitCheckpointManager(
                     new LocalStorageNamedDeviceFactory(),
                     new DefaultCheckpointNamingScheme(checkpointDir));
