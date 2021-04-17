@@ -190,7 +190,23 @@ namespace Orleans.Persistence.Faster
                     await Task.Delay(100, token);
                     if (store != null)
                     {
-                        await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
+                        var (success, guid) = await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
+                        logger.Info("Written checkpoint {guid}", guid);
+                        if (success)
+                        {
+                            var cprCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "cpr-checkpoints")).GetDirectories();
+                            foreach (var directory in cprCheckpoints)
+                            {
+                                if(directory.Name == guid.ToString()) continue;
+                                directory.Delete(true);
+                            }
+                            var indexCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "index-checkpoints")).GetDirectories();
+                            foreach (var directory in indexCheckpoints)
+                            {
+                                if(directory.Name == guid.ToString()) continue;
+                                directory.Delete(true);
+                            }
+                        }
                     }
 
                     if(!token.IsCancellationRequested)
@@ -208,8 +224,8 @@ namespace Orleans.Persistence.Faster
                     var session = sessionPool.GetSession();
                     try
                     {
-                        await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
-                        await store.CompleteCheckpointAsync(token);
+                        var (fullSuccess, fullGuid) = await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
+                        logger.Info("Written full checkpoint {guid}", fullGuid);
                         Console.WriteLine("Compacting log");
                         session.Compact(store.Log.SafeReadOnlyAddress, true);
                         // FasterKV keeps files in memory, compacting after unloading
@@ -235,8 +251,8 @@ namespace Orleans.Persistence.Faster
                 writeTrigger.Writer.TryComplete();
                 await _cancellableTaskCollection.DisposeAsync();
                 logger.Info("Disposed Jobs");
-                await store.TakeFullCheckpointAsync(CheckpointType.Snapshot);
-                logger.Info("Checkpoint complete");
+                var (success, guid) = await store.TakeFullCheckpointAsync(CheckpointType.Snapshot);
+                logger.Info("Written full checkpoint {guid}", guid);
                 store.Dispose();
                 store = null;
                 log.Dispose();
