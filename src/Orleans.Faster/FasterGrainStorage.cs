@@ -190,17 +190,17 @@ namespace Orleans.Persistence.Faster
                     await Task.Delay(100, token);
                     if (store != null)
                     {
+                        var cprCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "cpr-checkpoints")).GetDirectories();
+                        var indexCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "index-checkpoints")).GetDirectories();
                         var (success, guid) = await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
                         logger.Info("Written checkpoint {guid}", guid);
                         if (success)
                         {
-                            var cprCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "cpr-checkpoints")).GetDirectories();
                             foreach (var directory in cprCheckpoints)
                             {
                                 if(directory.Name == guid.ToString()) continue;
                                 directory.Delete(true);
                             }
-                            var indexCheckpoints = new DirectoryInfo(Path.Combine(_options.Value.StorageBaseDirectory, name, "index-checkpoints")).GetDirectories();
                             foreach (var directory in indexCheckpoints)
                             {
                                 if(directory.Name == guid.ToString()) continue;
