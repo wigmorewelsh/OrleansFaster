@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.FASTER.Core" Version="1.8.4" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="3.4.1" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.4.1" />
+    <PackageReference Include="Microsoft.Orleans.Runtime.Abstractions" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GrainStore" />
+  </ItemGroup>
+
+</Project>
