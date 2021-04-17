@@ -144,8 +144,8 @@ namespace Orleans.Persistence.Faster
                     MutableFraction = 0.2,
                     //warning changing the settings will reset the log files
                     // PageSizeBits = 12, // (4K Pages)
-                    SegmentSizeBits = 28, // about 250MB
-                    MemorySizeBits = 31 // 2GB
+                    SegmentSizeBits = 25, // about 32MB
+                    MemorySizeBits = 28 // 250MB
                 };
 
                 var checkpointDir = Path.Combine(_options.Value.StorageBaseDirectory,  name);
@@ -158,7 +158,7 @@ namespace Orleans.Persistence.Faster
                     CheckpointDir = checkpointDir,
                     CheckPointType = CheckpointType.FoldOver,
                 });
-
+                
                 sessionPool = new FasterSessionPool(store);
 
                 try
