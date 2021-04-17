@@ -29,7 +29,6 @@ namespace Orleans.Persistence.Faster
         private readonly string name;
         private FasterKV<ReadOnlyMemory<byte>, Memory<byte>> store;
         private IDevice? log;
-        private IDevice? olog;
 
         private CancellableTaskCollection _cancellableTaskCollection = new CancellableTaskCollection();
 
@@ -135,13 +134,11 @@ namespace Orleans.Persistence.Faster
             {
                 logger.Info("Starting Faster Log");
 
-                log = Devices.CreateLogDevice(@$"data\{name}\hlog.log");
-                olog = Devices.CreateLogDevice(@$"data\{name}\olog.log");
+                log = Devices.CreateLogDevice(@$"data/{name}/hlog.log");
 
                 var logSettings = new LogSettings
                 {
                     LogDevice = log,
-                    ObjectLogDevice = olog,
                     MutableFraction = 0.2,
                     //warning changing the settings will reset the log files
                     // PageSizeBits = 12, // (4K Pages)
@@ -149,7 +146,7 @@ namespace Orleans.Persistence.Faster
                     MemorySizeBits = 31 // 2GB
                 };
 
-                var checkpointDir = @$"data\{name}";
+                var checkpointDir = @$"data/{name}";
                 var deviceLogCommitCheckpointManager = new DeviceLogCommitCheckpointManager(
                     new LocalStorageNamedDeviceFactory(),
                     new DefaultCheckpointNamingScheme(checkpointDir));
@@ -240,8 +237,6 @@ namespace Orleans.Persistence.Faster
                 logger.Info("Checkpoint complete");
                 store.Dispose();
                 store = null;
-                olog.Dispose();
-                olog = null;
                 log.Dispose();
                 log = null;
                 logger.Info("Faster shutdown complete");
