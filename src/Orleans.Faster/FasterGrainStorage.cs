@@ -162,6 +162,7 @@ namespace Orleans.Persistence.Faster
                 {
                     CheckpointDir = checkpointDir,
                     CheckPointType = CheckpointType.FoldOver,
+                    RemoveOutdated = true
                 });
 
                 sessionPool = new FasterSessionPool(store, logSettings);
