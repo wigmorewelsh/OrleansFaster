@@ -9,9 +9,9 @@ namespace Orleans.Persistence.Faster
     {
         private List<CancellableTask> _jobs = new List<CancellableTask>();
         
-        public CancellableTask Run(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
+        public CancellableTask Run(Func<CancellationToken, Task> action, TaskCreationOptions taskCreationOptions = TaskCreationOptions.None, CancellationToken cancellationToken = default)
         {
-            var job = CancellableTask.Run(action, cancellationToken);
+            var job = CancellableTask.Run(action, taskCreationOptions, cancellationToken);
             _jobs.Add(job);
             return job;
         }

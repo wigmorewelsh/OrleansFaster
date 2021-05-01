@@ -9,16 +9,18 @@ namespace Orleans.Persistence.Faster
         private CancellationTokenSource _token;
         private Task _task;
 
-        private CancellableTask(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
+        private CancellableTask(Func<CancellationToken, Task> action, TaskCreationOptions taskCreationOptions,
+            CancellationToken cancellationToken = default)
         {
             _token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-            _task = Task.Factory.StartNew(() => action(_token.Token), TaskCreationOptions.None).Unwrap();
+            _task = Task.Factory.StartNew(() => action(_token.Token), taskCreationOptions).Unwrap();
         }
 
-        public static CancellableTask Run(Func<CancellationToken, Task> task, CancellationToken cancellationToken = default)
+        public static CancellableTask Run(Func<CancellationToken, Task> task, TaskCreationOptions taskCreationOptions,
+            CancellationToken cancellationToken = default)
         {
-            return new CancellableTask(task, cancellationToken);
+            return new CancellableTask(task, taskCreationOptions, cancellationToken);
         }
 
         public async ValueTask DisposeAsync()

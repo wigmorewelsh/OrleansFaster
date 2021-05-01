@@ -25,27 +25,38 @@ namespace Sample
         public Task StartAsync(CancellationToken cancellationToken)
         {
             cancellationTokenSource = new CancellationTokenSource();
-            task = Task.Factory.StartNew(() => ConsoleLoop(cancellationTokenSource.Token), TaskCreationOptions.LongRunning);
+            task = Task.Factory.StartNew(() => ConsoleLoop(cancellationTokenSource.Token), TaskCreationOptions.None);
             return Task.CompletedTask;
         }
 
         private async Task ConsoleLoop(CancellationToken cancellationToken)
         {
             await _client.Connect();
-           
-            AnsiConsole.Render(
-                new FigletText("Orleans REPL Started")
-                    .LeftAligned()
-                    .Color(Color.Red));
+          
+            _logger.Info("Starting batch");
+            
 
+            for (int i = 0; i < 50_000; i++)
+            {
+                var grain2 = _client.GetGrain<IHelloGrain>(i);
+                await grain2.DoOne();
+            
+            
+                for (int j = 0; j < 10; j++)
+                {
+                    grain2.DoOne();
+                    // await Task.Delay(1);
+                    // var current2 = await grain2.Current();
+                }
+            }
             
             var grain = _client.GetGrain<IHelloGrain>(0);
 
             var current = await grain.Current();
-            
-            AnsiConsole.MarkupLine($"Current value: {current}");
-            
-            await grain.DoOne();
+            _logger.Info("Current value {current}", current);
+
+            _logger.Info("Complete batch");
+ 
 
         }
 
