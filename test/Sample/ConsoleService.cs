@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Runtime;
+using Orleans.Storage;
 using Spectre.Console;
 
 namespace Sample
@@ -32,37 +37,40 @@ namespace Sample
         private async Task ConsoleLoop(CancellationToken cancellationToken)
         {
             await _client.Connect();
-          
-            _logger.Info("Starting batch");
-            
+            var store = _client.ServiceProvider.GetRequiredService<IGrainStorage>();
 
-            for (int i = 0; i < 50_000; i++)
+            _logger.Info("Starting batch");
+            var sw = Stopwatch.StartNew();
+
+            var tasks = new List<Task>();
+            for (int j = 0; j < 100; j++)
             {
-                var grain2 = _client.GetGrain<IHelloGrain>(i);
-                await grain2.DoOne();
-            
-            
-                for (int j = 0; j < 10; j++)
+                tasks.Add(Task.Run(async () =>
                 {
-                    grain2.DoOne();
-                    // await Task.Delay(1);
-                    // var current2 = await grain2.Current();
-                }
+                    
+                    for (int i = 0; i < 10_000; i++)
+                    {
+                        var grain2 = _client.GetGrain<IHelloGrain>(i);
+                        await grain2.DoOne();
+                        
+                        // await store.WriteStateAsync("", grain2 as GrainReference,
+                        //     new GrainState<HelloState>(new HelloState()));
+                    }
+                }));
             }
-            
+
+            await Task.WhenAll(tasks);
+
             var grain = _client.GetGrain<IHelloGrain>(0);
 
             var current = await grain.Current();
             _logger.Info("Current value {current}", current);
 
-            _logger.Info("Complete batch");
- 
-
+            _logger.LogError($"Complete batch in {sw.Elapsed}");
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            
             cancellationTokenSource.Cancel();
             var delay = Task.Delay(300);
             try

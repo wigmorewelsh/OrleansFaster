@@ -24,7 +24,7 @@ namespace Sample
                 .ConfigureLogging(logging =>
                 {
                     // logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Information);
+                    logging.SetMinimumLevel(LogLevel.Error);
                     logging.AddConsole();
                 })
                 .UseOrleans(orleans =>

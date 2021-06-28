@@ -53,8 +53,8 @@ namespace Orleans.Persistence.Faster
         public async Task ReadStateAsync(string grainType, GrainReference grainReference, IGrainState grainState)
         {
             var key = ComputeKey(grainType, grainReference);
-            var state = await Task.Run(async () =>
-            {
+            // var state = await Task.Run(async () =>
+            // {
                 var session = await sessionPool.GetSession();
                 try
                 {
@@ -74,7 +74,9 @@ namespace Orleans.Persistence.Faster
                         var state = _defaultSerializer.Deserialize(buffer, grainState.Type);
 
                         data.Item1.Dispose();
-                        return state;
+            grainState.State = state;
+            return;
+            // return state;
                     }
                 }
                 finally
@@ -82,9 +84,10 @@ namespace Orleans.Persistence.Faster
                     sessionPool.ReturnSession(session);
                 }
 
-                return Activator.CreateInstance(grainState.Type);
-            });
-            grainState.State = state;
+                // return Activator.CreateInstance(grainState.Type);
+            grainState.State = Activator.CreateInstance(grainState.Type);
+            // });
+            // grainState.State = state;
         }
 
 
@@ -114,6 +117,7 @@ namespace Orleans.Persistence.Faster
             var key = ComputeKey(grainType, grainReference);
 
             var array = await _defaultSerializer.Serialize(grainState);
+
             var desiredValue = array.AsMemory();
 
             var session = await sessionPool.GetSession();
@@ -123,7 +127,7 @@ namespace Orleans.Persistence.Faster
                 var res = await session.UpsertAsync(key.AsMemory(), desiredValue);
                 while (res.Complete() == Status.PENDING)
                     res = await res.CompleteAsync();
-                logger.Info("Written grain");
+                // logger.Info("Written grain");
             }
             finally
             {
@@ -170,6 +174,7 @@ namespace Orleans.Persistence.Faster
                 try
                 {
                     await store.RecoverAsync();
+                    await store.TakeFullCheckpointAsync(CheckpointType.Snapshot);
                 }
                 catch (Exception err)
                 {
@@ -196,11 +201,10 @@ namespace Orleans.Persistence.Faster
                     {
                         await writeTrigger.Reader.WaitToReadAsync(token);
                         await Task.Delay(100, token);
-                        // if (!token.IsCancellationRequested) 
                         if (store != null)
                         {
-                            logger.Info("Starting checkpoint");
-                            var (success, guid) = await store.TakeFullCheckpointAsync(CheckpointType.Snapshot);
+                            // logger.Info("Starting checkpoint");
+                            var (success, guid) = await store.TakeHybridLogCheckpointAsync(CheckpointType.FoldOver);
                             logger.Info("Written checkpoint {success} {guid}", success, guid);
                         }
 

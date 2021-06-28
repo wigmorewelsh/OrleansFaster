@@ -1,7 +1,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Orleans.Persistence.Faster.Converters;
 using Orleans.Runtime;
 using Orleans.Serialization;
@@ -11,15 +13,17 @@ namespace Orleans.Persistence.Faster
     public class DefaultSerializer : ISerializer
     {
         private JsonSerializerSettings jsonSettings;
+        private RecyclableMemoryStreamManager _manager = new RecyclableMemoryStreamManager();
+        private JsonSerializer serializer;
 
         public DefaultSerializer(IGrainReferenceConverter grainReferenceConverter)
         {
             this.jsonSettings = JsonSettings(grainReferenceConverter);
+            serializer = JsonSerializer.Create(jsonSettings);
         }
 
         public object Deserialize(byte[] buffer, Type grainStateType)
         {
-            var serializer = JsonSerializer.Create(jsonSettings);
             var reader = new StreamReader(new MemoryStream(buffer));
             var json = new JsonTextReader(reader);
             var res = serializer.Deserialize(json, grainStateType);
@@ -28,8 +32,7 @@ namespace Orleans.Persistence.Faster
 
         public async Task<byte[]> Serialize(IGrainState grainState)
         {
-            var serializer = JsonSerializer.Create(jsonSettings);
-            var ms = new MemoryStream();
+            using var ms = _manager.GetStream();//)_manager.GetStream();
             var writer = new StreamWriter(ms);
             serializer.Serialize(writer, grainState.State);
             await writer.FlushAsync();
@@ -45,7 +48,8 @@ namespace Orleans.Persistence.Faster
 
             var newSettings = new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.Auto
+                TypeNameHandling = TypeNameHandling.Auto,
+                SerializationBinder = new DefaultSerializationBinder()
             };
             newSettings.Converters.Add(new IPAddressConverter());
             newSettings.Converters.Add(new IPEndPointConverter());

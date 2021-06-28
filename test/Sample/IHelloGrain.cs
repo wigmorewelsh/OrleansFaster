@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using Orleans.Runtime;
 using Orleans.Storage;
 
 namespace Sample
 {
+    [Reentrant]
     internal class HelloGrain : Grain, IHelloGrain
     {
         readonly IPersistentState<HelloState> _storage;
@@ -33,6 +35,7 @@ namespace Sample
 
     internal interface IHelloGrain : IGrainWithIntegerKey
     {
+        // [OneWay]
         Task DoOne();
         Task<int> Current();
     }

@@ -115,7 +115,7 @@ namespace Orleans.Persistence.Faster
             this.fasterKv = fasterKv;
             // var sessionPoolPolicy = new SerializerSessionPoolPolicy(fasterKv);
             sessionPool = new AsyncPool<FasterSession>(
-                5,
+                logSettings.LogDevice.ThrottleLimit,
                 () => fasterKv.For(new CustomMemoryFunctions<byte>()).NewSession<CustomMemoryFunctions<byte>>());
         }
 
@@ -141,7 +141,7 @@ namespace Orleans.Persistence.Faster
             {
                 return obj.CompletePending();
                 // obj.FullReset();
-                // return true;
+                return true;
             }
         }
     }
