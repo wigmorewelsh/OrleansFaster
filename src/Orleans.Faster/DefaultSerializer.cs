@@ -22,24 +22,14 @@ namespace Orleans.Persistence.Faster
             serializer = JsonSerializer.Create(jsonSettings);
         }
 
-        public object Deserialize(byte[] buffer, Type grainStateType)
+        public object Deserialize(Memory<byte> buffer, Type grainStateType)
         {
-            var reader = new StreamReader(new MemoryStream(buffer));
-            var json = new JsonTextReader(reader);
-            var res = serializer.Deserialize(json, grainStateType);
-            return res;
+            return SpanJson.JsonSerializer.NonGeneric.Utf8.Deserialize(buffer.Span, grainStateType);
         }
 
-        public async Task<byte[]> Serialize(IGrainState grainState)
+        public async Task<ArraySegment<byte>> Serialize(IGrainState grainState)
         {
-            using var ms = _manager.GetStream();//)_manager.GetStream();
-            var writer = new StreamWriter(ms);
-            serializer.Serialize(writer, grainState.State);
-            await writer.FlushAsync();
-            ms.Position = 0;
-
-            var array = ms.ToArray();
-            return array;
+            return SpanJson.JsonSerializer.NonGeneric.Utf8.SerializeToArrayPool(grainState.State);
         }
 
         public JsonSerializerSettings JsonSettings(IGrainReferenceConverter locator)

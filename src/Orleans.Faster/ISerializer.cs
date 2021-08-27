@@ -5,7 +5,7 @@ namespace Orleans.Persistence.Faster
 {
     public interface ISerializer
     {
-        object Deserialize(byte[] buffer, Type grainStateType);
-        Task<byte[]> Serialize(IGrainState grainState);
+        object Deserialize(Memory<byte> buffer, Type grainStateType);
+        Task<ArraySegment<byte>> Serialize(IGrainState grainState);
     }
 }

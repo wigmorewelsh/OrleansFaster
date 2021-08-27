@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -69,7 +70,7 @@ namespace Orleans.Persistence.Faster
 
                     if (status == Status.OK)
                     {
-                        var buffer = data.Item1.Memory.ToArray();
+                        var buffer = data.Item1.Memory;
 
                         var state = _defaultSerializer.Deserialize(buffer, grainState.Type);
 
@@ -117,6 +118,7 @@ namespace Orleans.Persistence.Faster
             var key = ComputeKey(grainType, grainReference);
 
             var array = await _defaultSerializer.Serialize(grainState);
+             
 
             var desiredValue = array.AsMemory();
 
@@ -127,6 +129,8 @@ namespace Orleans.Persistence.Faster
                 var res = await session.UpsertAsync(key.AsMemory(), desiredValue);
                 while (res.Complete() == Status.PENDING)
                     res = await res.CompleteAsync();
+                
+                ArrayPool<byte>.Shared.Return(array.Array);
                 // logger.Info("Written grain");
             }
             finally

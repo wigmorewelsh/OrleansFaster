@@ -43,18 +43,14 @@ namespace Sample
             var sw = Stopwatch.StartNew();
 
             var tasks = new List<Task>();
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 200; j++)
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    
-                    for (int i = 0; i < 10_000; i++)
+                    for (int i = 0; i < 50_000 / 2; i++)
                     {
-                        var grain2 = _client.GetGrain<IHelloGrain>(i);
+                        var grain2 = _client.GetGrain<IHelloGrain>(i + j);
                         await grain2.DoOne();
-                        
-                        // await store.WriteStateAsync("", grain2 as GrainReference,
-                        //     new GrainState<HelloState>(new HelloState()));
                     }
                 }));
             }

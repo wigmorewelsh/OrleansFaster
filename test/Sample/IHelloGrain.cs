@@ -3,6 +3,7 @@ using Orleans;
 using Orleans.Concurrency;
 using Orleans.Runtime;
 using Orleans.Storage;
+using SpanJson;
 
 namespace Sample
 {
@@ -30,6 +31,16 @@ namespace Sample
 
     internal class HelloState
     {
+        public HelloState()
+        {
+            
+        }
+        
+        [JsonConstructor]
+        public HelloState(int number)
+        {
+            Number = number;
+        }
         public int Number { get; set; }
     }
 
