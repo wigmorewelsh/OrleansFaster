@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    
+    <ItemGroup>
+        <None Include="../../.github/**/*.*" LinkBase="Build" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.FASTER.Core" Version="2.5.1" />
+        <PackageReference Include="Microsoft.Orleans.Core" Version="7.1.1" />
+        <PackageReference Include="Microsoft.Orleans.Server" Version="7.1.1" />
+    </ItemGroup>
+
+</Project>

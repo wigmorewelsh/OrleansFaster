@@ -62,13 +62,13 @@ namespace Orleans.Persistence.Faster
                     var result = await session.ReadAsync(key.AsMemory());
                     var (status, data) = result.Complete();
 
-                    while (status == Status.PENDING)
+                    while (status.IsPending) 
                     {
                         await session.CompletePendingAsync();
                         (status, data) = result.Complete();
                     }
 
-                    if (status == Status.OK)
+                    if (status.IsCompletedSuccessfully)
                     {
                         var buffer = data.Item1.Memory;
 
@@ -127,7 +127,7 @@ namespace Orleans.Persistence.Faster
             {
                 writeTrigger.Writer.TryWrite(0);
                 var res = await session.UpsertAsync(key.AsMemory(), desiredValue);
-                while (res.Complete() == Status.PENDING)
+                while (res.Complete().IsPending)
                     res = await res.CompleteAsync();
                 
                 ArrayPool<byte>.Shared.Return(array.Array);
@@ -169,7 +169,7 @@ namespace Orleans.Persistence.Faster
                 store = new FasterKV<ReadOnlyMemory<byte>, Memory<byte>>(1L << 10, logSettings, new CheckpointSettings
                 {
                     CheckpointDir = checkpointDir,
-                    CheckPointType = CheckpointType.FoldOver,
+                    // CheckPointType = CheckpointType.FoldOver,
                     RemoveOutdated = true
                 });
 
@@ -238,7 +238,7 @@ namespace Orleans.Persistence.Faster
                         var (fullSuccess, fullGuid) =
                             await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, token);
                         logger.Info("Written full checkpoint {succ} {guid}", fullSuccess, fullGuid);
-                        session.Compact((long) logSafeReadOnlyAddress, true);
+                        session.Compact((long) logSafeReadOnlyAddress);
                         sessionPool.ReturnSession(session);
                         await Task.Delay(60 * 5 * 1000, token);
                     }

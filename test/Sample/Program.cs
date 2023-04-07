@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,6 +22,8 @@ namespace Sample
 
         public static IHostBuilder CreateHost(string[] args)
         {
+            ThreadPool.SetMaxThreads((int)(Environment.ProcessorCount * 1.5), Environment.ProcessorCount);
+            
             return new HostBuilder()
                 .ConfigureLogging(logging =>
                 {
