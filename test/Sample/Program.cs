@@ -6,8 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Configuration;
+using Orleans.Faster7Store;
 using Orleans.Hosting;
-using Orleans.Persistence.Faster;
 
 namespace Sample
 {
@@ -42,10 +42,8 @@ namespace Sample
                             options.ServiceId = "OrleansBasics";
                         });
 
-                    orleans.AddFasterNetGrainStorage("Default");
+                    orleans.AddFasterStorage("Default");
 
-                    orleans.ConfigureApplicationParts(parts =>
-                        parts.AddApplicationPart(typeof(HelloGrain).Assembly));
                 })
                 .UseOrleansRepl();
         }

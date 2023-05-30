@@ -6,7 +6,7 @@ namespace Orleans.Persistence.Faster
     /// <summary>
     /// ConfigurationValidator for AdoNetGrainStorageOptions
     /// </summary>
-    public class FasterGrainStorageOptionsValidator : IConfigurationValidator
+    internal class FasterGrainStorageOptionsValidator : IConfigurationValidator
     {
         private readonly FasterGrainStorageOptions options;
         private readonly string name;

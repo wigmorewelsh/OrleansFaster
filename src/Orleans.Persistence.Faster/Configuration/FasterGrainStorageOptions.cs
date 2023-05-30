@@ -1,9 +1,10 @@
 using System;
 using Newtonsoft.Json;
+using Orleans.Storage;
 
 namespace Orleans.Faster
 {
-    public class FasterGrainStorageOptions
+    public class FasterGrainStorageOptions : IStorageProviderSerializerOptions
     {
         [Redact] public string StorageBaseDirectory { get; set; } = "data";
 
@@ -17,6 +18,7 @@ namespace Orleans.Faster
         public const int DEFAULT_INIT_STAGE = ServiceLifecycleStage.ApplicationServices;
 
         public Action<JsonSerializerSettings> ConfigureJsonSerializerSettings { get; set; }
-        
+
+        public IGrainStorageSerializer GrainStorageSerializer { get; set; }
     }
 }

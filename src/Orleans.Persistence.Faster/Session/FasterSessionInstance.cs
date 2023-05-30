@@ -5,7 +5,7 @@ using Orleans.Runtime;
 
 namespace Orleans.Faster7Store;
 
-public class FasterSessionInstance
+internal class FasterSessionInstance
 {
     private readonly FasterSessionPool sessionPool;
 

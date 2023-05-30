@@ -2,12 +2,13 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Orleans.Configuration.Overrides;
+using Orleans.Faster7Store;
 using Orleans.Persistence.Faster;
 using Orleans.Storage;
 
 namespace Orleans.Faster
 {
-    public static class FasterGrainStorageFactory
+    internal static class FasterGrainStorageFactory
     {
         public static IGrainStorage Create(IServiceProvider services, string name)
         {

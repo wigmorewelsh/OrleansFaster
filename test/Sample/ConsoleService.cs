@@ -36,10 +36,9 @@ namespace Sample
 
         private async Task ConsoleLoop(CancellationToken cancellationToken)
         {
-            await _client.Connect();
             var store = _client.ServiceProvider.GetRequiredService<IGrainStorage>();
 
-            _logger.Info("Starting batch");
+            _logger.LogInformation("Starting batch");
             var sw = Stopwatch.StartNew();
 
             var tasks = new List<Task>();
@@ -60,7 +59,7 @@ namespace Sample
             var grain = _client.GetGrain<IHelloGrain>(0);
 
             var current = await grain.Current();
-            _logger.Info("Current value {current}", current);
+            _logger.LogInformation("Current value {current}", current);
 
             _logger.LogError($"Complete batch in {sw.Elapsed}");
         }
@@ -74,7 +73,7 @@ namespace Sample
                 var result = await Task.WhenAny(task, delay);
                 if (result == delay)
                 {
-                    _logger.Info("Failed to stop task in time");
+                    _logger.LogInformation("Failed to stop task in time");
                 }
             }
             catch (Exception err)

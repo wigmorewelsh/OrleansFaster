@@ -3,7 +3,7 @@ using Orleans.Storage;
 
 namespace Orleans.Faster7Store;
 
-public class FasterGrainStorage : IGrainStorage
+internal class FasterGrainStorage : IGrainStorage
 {
     private readonly IGrainStorageSerializer serializer;
     private readonly IGrainFactory factory;

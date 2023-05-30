@@ -3,7 +3,7 @@ using Orleans.Runtime;
 
 namespace Orleans.Faster7Store;
 
-public class FasterStorageGrain : Grain, IFasterStorageGrain
+internal class FasterStorageGrain : Grain, IFasterStorageGrain
 {
     private readonly FasterSessionInstance session;
 

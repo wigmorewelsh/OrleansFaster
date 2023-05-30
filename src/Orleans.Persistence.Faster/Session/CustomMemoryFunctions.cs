@@ -7,7 +7,7 @@ namespace Orleans.Faster7Store;
 /// Custom callback functions for FASTER operations with ReadOnlyMemory&lt;T&gt; as Key, Memory&lt;T&gt; as Value and Input,
 /// (IMemoryOwner&lt;T&gt;, int) as Output, and T as Context, for unmanaged (blittable) type T
 /// </summary>
-public sealed class CustomMemoryFunctions<T> : MemoryFunctions<ReadOnlyMemory<T>, T, T>
+internal sealed class CustomMemoryFunctions<T> : MemoryFunctions<ReadOnlyMemory<T>, T, T>
     where T : unmanaged
 {
     /// <inheritdoc/>

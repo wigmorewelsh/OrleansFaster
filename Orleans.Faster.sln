@@ -5,15 +5,13 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{69325F3C-76C1-4039-A5DA-F14802FF539D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Faster", "src\Orleans.Faster\Orleans.Faster.csproj", "{AD19994E-5D3E-42FC-AACD-E239D68F2532}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FB9C4109-C783-46E6-B633-263547246C13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "test\Sample\Sample.csproj", "{E6F03E85-AF3F-4792-B65B-26D70F6F2A95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Faster.Tests", "test\Orleans.Faster.Tests\Orleans.Faster.Tests.csproj", "{947CC51B-A2E2-4207-9BFB-EDA20F997E2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Faster7Store", "src\Orleans.Faster7Store\Orleans.Faster7Store.csproj", "{328E52C6-CCBB-4F54-8ECF-3449FCA22224}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Persistence.Faster", "src\Orleans.Persistence.Faster\Orleans.Persistence.Faster.csproj", "{328E52C6-CCBB-4F54-8ECF-3449FCA22224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,18 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|x64.Build.0 = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Debug|x86.Build.0 = Debug|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|x64.ActiveCfg = Release|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|x64.Build.0 = Release|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|x86.ActiveCfg = Release|Any CPU
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532}.Release|x86.Build.0 = Release|Any CPU
 		{E6F03E85-AF3F-4792-B65B-26D70F6F2A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6F03E85-AF3F-4792-B65B-26D70F6F2A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6F03E85-AF3F-4792-B65B-26D70F6F2A95}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -78,7 +64,6 @@ Global
 		{328E52C6-CCBB-4F54-8ECF-3449FCA22224}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AD19994E-5D3E-42FC-AACD-E239D68F2532} = {69325F3C-76C1-4039-A5DA-F14802FF539D}
 		{E6F03E85-AF3F-4792-B65B-26D70F6F2A95} = {FB9C4109-C783-46E6-B633-263547246C13}
 		{947CC51B-A2E2-4207-9BFB-EDA20F997E2D} = {FB9C4109-C783-46E6-B633-263547246C13}
 		{328E52C6-CCBB-4F54-8ECF-3449FCA22224} = {69325F3C-76C1-4039-A5DA-F14802FF539D}

@@ -4,7 +4,7 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Orleans.Faster7Store;
 
-public sealed class FasterSessionPool
+internal sealed class FasterSessionPool
 {
     private readonly FasterKV<ReadOnlyMemory<byte>, Memory<byte>> fasterKv;
     private readonly AsyncPool<ClientSession<ReadOnlyMemory<byte>, Memory<byte>, Memory<byte>, (IMemoryOwner<byte>, int), byte, CustomMemoryFunctions<byte>>> sessionPool;
