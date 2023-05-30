@@ -1,12 +1,10 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Orleans.Configuration.Overrides;
-using Orleans.Faster7Store;
-using Orleans.Persistence.Faster;
+using Orleans.Persistence.Faster.Storage;
 using Orleans.Storage;
 
-namespace Orleans.Faster
+namespace Orleans.Persistence.Faster.Configuration
 {
     internal static class FasterGrainStorageFactory
     {

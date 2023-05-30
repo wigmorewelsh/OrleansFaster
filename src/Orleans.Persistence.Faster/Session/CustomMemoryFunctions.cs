@@ -1,7 +1,7 @@
 using System.Buffers;
 using FASTER.core;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Session;
 
 /// <summary>
 /// Custom callback functions for FASTER operations with ReadOnlyMemory&lt;T&gt; as Key, Memory&lt;T&gt; as Value and Input,

@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Options;
+using Orleans.Persistence.Faster.Session;
 using Orleans.Runtime;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Storage;
 
 internal class FasterStorageGrain : Grain, IFasterStorageGrain
 {

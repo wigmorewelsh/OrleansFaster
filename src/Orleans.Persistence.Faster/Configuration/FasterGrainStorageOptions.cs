@@ -1,8 +1,7 @@
-using System;
 using Newtonsoft.Json;
 using Orleans.Storage;
 
-namespace Orleans.Faster
+namespace Orleans.Persistence.Faster.Configuration
 {
     public class FasterGrainStorageOptions : IStorageProviderSerializerOptions
     {

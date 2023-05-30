@@ -3,7 +3,7 @@ using FASTER.core;
 using Microsoft.Extensions.Options;
 using Orleans.Runtime;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Session;
 
 internal class FasterSessionInstance
 {

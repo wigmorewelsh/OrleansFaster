@@ -1,7 +1,7 @@
 using Orleans.Runtime;
 using Orleans.Storage;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Storage;
 
 internal class FasterGrainStorage : IGrainStorage
 {

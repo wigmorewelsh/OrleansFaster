@@ -2,7 +2,7 @@ using System.Buffers;
 using FASTER.core;
 using Microsoft.Extensions.ObjectPool;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Session;
 
 internal sealed class FasterSessionPool
 {

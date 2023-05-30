@@ -1,7 +1,6 @@
-using Orleans.Faster;
 using Orleans.Runtime;
 
-namespace Orleans.Persistence.Faster
+namespace Orleans.Persistence.Faster.Configuration
 {
     /// <summary>
     /// ConfigurationValidator for AdoNetGrainStorageOptions

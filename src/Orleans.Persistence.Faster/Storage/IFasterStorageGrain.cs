@@ -1,6 +1,6 @@
 using Orleans.Runtime;
 
-namespace Orleans.Faster7Store;
+namespace Orleans.Persistence.Faster.Storage;
 
 internal interface IFasterStorageGrain : IGrainWithIntegerKey
 {
