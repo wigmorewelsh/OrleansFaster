@@ -4,6 +4,9 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageId>Orleans.Persistance.Faster</PackageId>
+        <PackageDescription>Persistance for Orleans based on FasterKV</PackageDescription>
+        <RepositoryUrl>https://github.com/wigmorewelsh/OrleansFaster</RepositoryUrl>
     </PropertyGroup>
 
     
@@ -15,6 +18,7 @@
         <PackageReference Include="Microsoft.FASTER.Core" Version="2.5.3" />
         <PackageReference Include="Microsoft.Orleans.Core" Version="7.1.2" />
         <PackageReference Include="Microsoft.Orleans.Server" Version="7.1.2" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>
