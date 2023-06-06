@@ -20,9 +20,13 @@ internal class FasterGrainStorage : IGrainStorage
         //TODO: support other grain ids
         var grain = factory.GetGrain<IFasterStorageGrain>(grainId.GetIntegerKey() % NumberOfShards);
         var data = await grain.GetAsync(grainId, stateName);
-        if (data != null)
+        if (data != null && data.Length > 0)
         {
             grainState.State = serializer.Deserialize<T>(new BinaryData(data)) ?? Activator.CreateInstance<T>();
+        }
+        else
+        {
+            grainState.State = Activator.CreateInstance<T>();
         }
     }
 

@@ -12,7 +12,7 @@ internal class FasterSessionInstance
     public FasterSessionInstance(IOptions<FasterSettings> _options)
     {
         var log = Devices.CreateLogDevice(Path.Combine(_options.Value.StorageBaseDirectory, @$"Test/hlog.log"));
-        
+
         var logSettings = new LogSettings
         {
             LogDevice = log,
@@ -22,7 +22,7 @@ internal class FasterSessionInstance
             SegmentSizeBits = 28, // about 32MB
             MemorySizeBits = 31 // 250MB,
         };
-        
+
         var checkpointDir = Path.Combine(_options.Value.StorageBaseDirectory, "Test");
 
         var store = new FasterKV<ReadOnlyMemory<byte>, Memory<byte>>(1L << 10, logSettings, new CheckpointSettings
@@ -31,7 +31,7 @@ internal class FasterSessionInstance
             // CheckPointType = CheckpointType.FoldOver,
             RemoveOutdated = true
         });
-
+        
         sessionPool = new FasterSessionPool(store, logSettings);
     }
 
@@ -43,12 +43,13 @@ internal class FasterSessionInstance
         var keySpan = new ReadOnlyMemory<byte>(keyBytes);
         var valueSpan = new Memory<byte>(valueBytes);
         var status = await session.UpsertAsync(ref keySpan, ref valueSpan);
-        while(status.Status.IsPending)
+        while (status.Status.IsPending)
         {
+            await session.CompletePendingAsync(true);
             status = await status.CompleteAsync();
         }
     }
-    
+
     private static byte[] ComputeKey(string storageName, GrainId grainReference)
     {
         var grainId = grainReference.Key.AsSpan();
@@ -73,10 +74,11 @@ internal class FasterSessionInstance
         var keySpan = new ReadOnlyMemory<byte>(keyBytes);
         var res = await session.ReadAsync(ref keySpan);
         var (mem, len) = res.Output;
-        if(len is 0 || mem is null)
+        if (len is 0 || mem is null)
         {
             return Array.Empty<byte>();
         }
+
         var bytes = mem.Memory.Slice(0, len).ToArray();
         return bytes;
     }

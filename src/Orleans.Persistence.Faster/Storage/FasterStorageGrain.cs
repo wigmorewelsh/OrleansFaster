@@ -16,12 +16,10 @@ internal class FasterStorageGrain : Grain, IFasterStorageGrain
     public async Task SetAsync(GrainId key, string storageName, byte[] value)
     {
         await session.WriteAsync(key, storageName, value);
-         
     }
     
     public async Task<byte[]> GetAsync(GrainId key, string storageName)
     {
         return  await session.ReadAsync(key, storageName);
-        
     }
 }
