@@ -73,6 +73,10 @@ internal class FasterSessionInstance
         var keySpan = new ReadOnlyMemory<byte>(keyBytes);
         var res = await session.ReadAsync(ref keySpan);
         var (mem, len) = res.Output;
+        if(len is 0 || mem is null)
+        {
+            return Array.Empty<byte>();
+        }
         var bytes = mem.Memory.Slice(0, len).ToArray();
         return bytes;
     }

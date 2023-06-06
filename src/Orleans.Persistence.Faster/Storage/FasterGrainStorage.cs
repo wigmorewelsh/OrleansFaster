@@ -22,7 +22,7 @@ internal class FasterGrainStorage : IGrainStorage
         var data = await grain.GetAsync(grainId, stateName);
         if (data != null)
         {
-            grainState.State = serializer.Deserialize<T>(new BinaryData(data));
+            grainState.State = serializer.Deserialize<T>(new BinaryData(data)) ?? Activator.CreateInstance<T>();
         }
     }
 
@@ -37,5 +37,6 @@ internal class FasterGrainStorage : IGrainStorage
     {
         var grain = factory.GetGrain<IFasterStorageGrain>(grainId.GetIntegerKey() % NumberOfShards );
         await grain.SetAsync(grainId, stateName, null);
+        grainState.State = Activator.CreateInstance<T>();
     }
 }
