@@ -4,15 +4,20 @@ using Orleans.Configuration.Overrides;
 using Orleans.Persistence.Faster.Storage;
 using Orleans.Storage;
 
-namespace Orleans.Persistence.Faster.Configuration
+namespace Orleans.Persistence.Faster.Configuration;
+
+internal static class FasterGrainStorageFactory
 {
-    internal static class FasterGrainStorageFactory
+    public static IGrainStorage Create(IServiceProvider services, object? key)
     {
-        public static IGrainStorage Create(IServiceProvider services, string name)
+        var name = key as string;
+        if(string.IsNullOrEmpty(name))
         {
-            var optionsMonitor = services.GetRequiredService<IOptionsMonitor<FasterGrainStorageOptions>>();
-            var clusterOptions = services.GetProviderClusterOptions(name);
-            return ActivatorUtilities.CreateInstance<FasterGrainStorage>(services);//, Microsoft.Extensions.Options.Options.Create(optionsMonitor.Get(name)), name, clusterOptions);
+            throw new ArgumentException("Storage name cannot be null or empty", nameof(key));
         }
+        
+        var optionsMonitor = services.GetRequiredService<IOptionsMonitor<FasterGrainStorageOptions>>();
+        var clusterOptions = services.GetProviderClusterOptions(name);
+        return ActivatorUtilities.CreateInstance<FasterGrainStorage>(services);//, Microsoft.Extensions.Options.Options.Create(optionsMonitor.Get(name)), name, clusterOptions);
     }
 }

@@ -9,54 +9,53 @@ using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.Persistence.Faster;
 
-namespace Sample
+namespace Sample;
+
+class Program
 {
-    class Program
-    {
-        public static async Task<int> Main(string[] args)
-        {            
-            var main = CreateHost(args).Build();
-            await main.RunAsync();
-            return 0;
-        }
+    public static async Task<int> Main(string[] args)
+    {            
+        var main = CreateHost(args).Build();
+        await main.RunAsync();
+        return 0;
+    }
 
-        public static IHostBuilder CreateHost(string[] args)
-        {
-            ThreadPool.SetMaxThreads((int)(Environment.ProcessorCount * 1.5), Environment.ProcessorCount);
+    public static IHostBuilder CreateHost(string[] args)
+    {
+        ThreadPool.SetMaxThreads((int)(Environment.ProcessorCount * 1.5), Environment.ProcessorCount);
             
-            return new HostBuilder()
-                .ConfigureLogging(logging =>
-                {
-                    // logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Error);
-                    logging.AddConsole();
-                })
-                .UseOrleans(orleans =>
-                {
-                    orleans
-                        // .ConfigureDefaults()
-                        .UseLocalhostClustering()
-                        .Configure<ClusterOptions>(options =>
-                        {
-                            options.ClusterId = "dev";
-                            options.ServiceId = "OrleansBasics";
-                        });
-
-                    orleans.AddFasterStorage("Default");
-
-                })
-                .UseOrleansRepl();
-        }
-    }
-
-    public static class HostBuilderExtensions
-    {
-        public static IHostBuilder UseOrleansRepl(this IHostBuilder builder)
-        {
-            return builder.ConfigureServices(services =>
+        return new HostBuilder()
+            .ConfigureLogging(logging =>
             {
-                services.AddHostedService<ConsoleService>();
-            });
-        } 
+                // logging.ClearProviders();
+                logging.SetMinimumLevel(LogLevel.Information);
+                logging.AddConsole();
+            })
+            .UseOrleans(orleans =>
+            {
+                orleans
+                    // .ConfigureDefaults()
+                    .UseLocalhostClustering()
+                    .Configure<ClusterOptions>(options =>
+                    {
+                        options.ClusterId = "dev";
+                        options.ServiceId = "OrleansBasics";
+                    });
+
+                orleans.AddFasterStorage("Default");
+
+            })
+            .UseOrleansRepl();
     }
+}
+
+public static class HostBuilderExtensions
+{
+    public static IHostBuilder UseOrleansRepl(this IHostBuilder builder)
+    {
+        return builder.ConfigureServices(services =>
+        {
+            services.AddHostedService<ConsoleService>();
+        });
+    } 
 }

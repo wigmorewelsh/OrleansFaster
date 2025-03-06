@@ -68,8 +68,8 @@ public static class SiloBuilderExtensions
             services.AddTransient<IPostConfigureOptions<FasterGrainStorageOptions>, DefaultStorageProviderSerializerOptionsConfigurator<FasterGrainStorageOptions>>();
             services.ConfigureNamedOptionForLogging<FasterGrainStorageOptions>(name);
             if (string.Equals(name, "Default", StringComparison.Ordinal))
-                services.TryAddSingleton<IGrainStorage>(sp => sp.GetServiceByName<IGrainStorage>("Default"));
-            services.AddSingletonNamedService<IGrainStorage>(name, FasterGrainStorageFactory.Create);
+                services.TryAddSingleton<IGrainStorage>(sp => sp.GetKeyedService<IGrainStorage>("Default"));
+            services.AddKeyedSingleton<IGrainStorage>(name, FasterGrainStorageFactory.Create);
         }));
     }
 }

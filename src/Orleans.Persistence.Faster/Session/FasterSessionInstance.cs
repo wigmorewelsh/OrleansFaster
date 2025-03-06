@@ -5,9 +5,10 @@ using Orleans.Runtime;
 
 namespace Orleans.Persistence.Faster.Session;
 
-internal class FasterSessionInstance
+internal class FasterSessionInstance : IDisposable
 {
     private readonly FasterSessionPool sessionPool;
+    private readonly FasterKV<ReadOnlyMemory<byte>,Memory<byte>> store;
 
     public FasterSessionInstance(IOptions<FasterSettings> _options)
     {
@@ -25,29 +26,65 @@ internal class FasterSessionInstance
 
         var checkpointDir = Path.Combine(_options.Value.StorageBaseDirectory, "Test");
 
-        var store = new FasterKV<ReadOnlyMemory<byte>, Memory<byte>>(1L << 10, logSettings, new CheckpointSettings
+        store = new FasterKV<ReadOnlyMemory<byte>, Memory<byte>>(1L << 10, logSettings, new CheckpointSettings
         {
             CheckpointDir = checkpointDir,
-            // CheckPointType = CheckpointType.FoldOver,
             RemoveOutdated = true
         });
-        
+
+        try
+        {
+            store.Recover();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
         sessionPool = new FasterSessionPool(store, logSettings);
+        
+        Task.Run(BackgroundCheckpoint);
+    }
+    
+    private async Task BackgroundCheckpoint()
+    {
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        while (await timer.WaitForNextTickAsync())
+        {
+            try
+            {
+                await store.TakeHybridLogCheckpointAsync(CheckpointType.FoldOver);
+                var (complete, _) = await store.TakeFullCheckpointAsync(CheckpointType.FoldOver, CancellationToken.None); } catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 
     public async Task WriteAsync(GrainId key, string storageName, byte[] value)
     {
         var session = await sessionPool.GetSession();
-        var keyBytes = ComputeKey(storageName, key);
-        var valueBytes = value;
-        var keySpan = new ReadOnlyMemory<byte>(keyBytes);
-        var valueSpan = new Memory<byte>(valueBytes);
-        var status = await session.UpsertAsync(ref keySpan, ref valueSpan);
-        while (status.Status.IsPending)
+        try
         {
-            await session.CompletePendingAsync(true);
-            status = await status.CompleteAsync();
+            var keyBytes = ComputeKey(storageName, key);
+            var valueBytes = value;
+            var keySpan = new ReadOnlyMemory<byte>(keyBytes);
+            var valueSpan = new Memory<byte>(valueBytes);
+            var status = await session.UpsertAsync(ref keySpan, ref valueSpan);
+            while (status.Status.IsPending)
+            {
+                status = await status.CompleteAsync();
+            }
         }
+        catch (FasterException ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+        finally
+        {
+            sessionPool.ReturnSession(session);
+        }
+
     }
 
     private static byte[] ComputeKey(string storageName, GrainId grainReference)
@@ -70,16 +107,29 @@ internal class FasterSessionInstance
     public async Task<byte[]> ReadAsync(GrainId key, string storageName)
     {
         var session = await sessionPool.GetSession();
-        var keyBytes = ComputeKey(storageName, key);
-        var keySpan = new ReadOnlyMemory<byte>(keyBytes);
-        var res = await session.ReadAsync(ref keySpan);
-        var (mem, len) = res.Output;
-        if (len is 0 || mem is null)
+        try
         {
-            return Array.Empty<byte>();
-        }
+            var keyBytes = ComputeKey(storageName, key);
+            var keySpan = new ReadOnlyMemory<byte>(keyBytes);
+            var res = await session.ReadAsync(ref keySpan);
+            res.Complete();
+            var (mem, len) = res.Output;
+            if (len is 0 || mem is null)
+            {
+                return Array.Empty<byte>();
+            }
 
-        var bytes = mem.Memory.Slice(0, len).ToArray();
-        return bytes;
+            var bytes = mem.Memory.Slice(0, len).ToArray();
+            return bytes;
+        }
+        finally
+        {
+            sessionPool.ReturnSession(session);
+        }
+    }
+
+    public void Dispose()
+    {
+        store.Dispose();
     }
 }

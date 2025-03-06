@@ -1,10 +1,12 @@
 using Microsoft.Extensions.Options;
+using Orleans.Concurrency;
 using Orleans.Persistence.Faster.Session;
 using Orleans.Runtime;
 
 namespace Orleans.Persistence.Faster.Storage;
 
-internal class FasterStorageGrain : Grain, IFasterStorageGrain
+[Reentrant]
+public class FasterStorageGrain : Grain, IFasterStorageGrain
 {
     private readonly FasterSessionInstance session;
 
@@ -12,7 +14,13 @@ internal class FasterStorageGrain : Grain, IFasterStorageGrain
     {
         session = new FasterSessionInstance(Options.Create(new FasterSettings()));
     }
-    
+
+    public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+    {
+        session.Dispose();
+        return Task.CompletedTask;
+    }
+
     public async Task SetAsync(GrainId key, string storageName, byte[] value)
     {
         await session.WriteAsync(key, storageName, value);
