@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using FASTER.core;
 
-namespace Orleans.Persistence.Faster.Session;
+namespace Orleans.Contrib.Persistance.Faster.Session;
 
 /// <summary>
 /// Asynchronous pool of fixed pre-filled capacity

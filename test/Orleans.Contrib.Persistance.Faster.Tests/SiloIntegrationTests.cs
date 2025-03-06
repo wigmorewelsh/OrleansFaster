@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Orleans.Contrib.Persistance.Faster.Tests.Grains;
 using Orleans.Contrib.Streaming.NATS.Tests.Fixtures;
-using Orleans.Faster.Tests.Grains;
 using Xunit;
 
-namespace Orleans.Faster.Tests;
+namespace Orleans.Contrib.Persistance.Faster.Tests;
 
 public class SiloIntegrationTests : IClassFixture<TestFixture<SiloIntegrationTests.TestSetting>>
 {

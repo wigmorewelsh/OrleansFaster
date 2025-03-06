@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Options;
 using Orleans.Concurrency;
-using Orleans.Persistence.Faster.Session;
+using Orleans.Contrib.Persistance.Faster.Session;
 using Orleans.Runtime;
 
-namespace Orleans.Persistence.Faster.Storage;
+namespace Orleans.Contrib.Persistance.Faster.Storage;
 
 [Reentrant]
 public class FasterStorageGrain : Grain, IFasterStorageGrain

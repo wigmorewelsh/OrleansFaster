@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
-using Orleans.Persistence.Faster;
+using Orleans.Contrib.Persistance.Faster;
 
 namespace Sample;
 

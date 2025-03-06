@@ -1,4 +1,4 @@
-namespace Orleans.Persistence.Faster;
+namespace Orleans.Contrib.Persistance.Faster;
 
 public class FasterSettings
 {

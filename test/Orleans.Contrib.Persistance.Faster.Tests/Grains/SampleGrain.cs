@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Orleans.Runtime;
 
-namespace Orleans.Faster.Tests.Grains;
+namespace Orleans.Contrib.Persistance.Faster.Tests.Grains;
 
 public class SampleGrain : Grain, ISampleGrain
 {

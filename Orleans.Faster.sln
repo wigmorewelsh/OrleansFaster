@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FB9C4109-C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "test\Sample\Sample.csproj", "{E6F03E85-AF3F-4792-B65B-26D70F6F2A95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Faster.Tests", "test\Orleans.Faster.Tests\Orleans.Faster.Tests.csproj", "{947CC51B-A2E2-4207-9BFB-EDA20F997E2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Contrib.Persistance.Faster.Tests", "test\Orleans.Contrib.Persistance.Faster.Tests\Orleans.Contrib.Persistance.Faster.Tests.csproj", "{947CC51B-A2E2-4207-9BFB-EDA20F997E2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Persistence.Faster", "src\Orleans.Persistence.Faster\Orleans.Persistence.Faster.csproj", "{328E52C6-CCBB-4F54-8ECF-3449FCA22224}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Contrib.Persistance.Faster", "src\Orleans.Contrib.Persistance.Faster\Orleans.Contrib.Persistance.Faster.csproj", "{328E52C6-CCBB-4F54-8ECF-3449FCA22224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

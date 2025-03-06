@@ -2,11 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Orleans.Configuration;
-using Orleans.Persistence.Faster.Configuration;
+using Orleans.Contrib.Persistance.Faster.Configuration;
 using Orleans.Runtime;
 using Orleans.Storage;
 
-namespace Orleans.Persistence.Faster;
+namespace Orleans.Contrib.Persistance.Faster;
 #nullable disable
 
 public static class SiloBuilderExtensions

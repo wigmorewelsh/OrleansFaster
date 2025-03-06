@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Orleans.Faster.Tests.Grains;
+namespace Orleans.Contrib.Persistance.Faster.Tests.Grains;
 
 public interface ISampleGrain : IGrainWithGuidKey
 {
